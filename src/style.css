@@ -1,0 +1,94 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.center {
+  background-color: #d7e9ff;
+  width: 300px;
+  height: 150px;
+  border-radius: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.chosen-cards {
+  background-color: grey;
+  width: 60px;
+  height: 100px;
+  border-radius: 15%;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+.possible-cards ul {
+  list-style: none;
+
+  display: flex;
+  position: absolute;
+  top: 800px;
+  left: 375px;
+}
+.possible-cards ul li {
+  margin-left: 10px;
+}
+.card {
+  height: 100px;
+  border-radius: 15%;
+  width: 60px;
+  background-color: white;
+}
+
+.active {
+  background-color: black;
+  color: white;
+}
+.reveal-cards {
+  padding: 20px;
+  border-radius: 15%;
+  width: 200px;
+
+  color: white;
+  background-color: #74b3ff;
+  display: none;
+}
+.play-again {
+  padding: 20px;
+  border-radius: 15%;
+  width: 200px;
+
+  color: white;
+  background-color: #74b3ff;
+  display: none;
+}
+.average {
+  position: absolute;
+  top: 800px;
+  left: 750px;
+  font-size: 40px;
+  display: none;
+}
+.active2 {
+  background-color: gray;
+  color: white;
+  display: none;
+}
+.active3 {
+  display: inline-block;
+  background-color: gray;
+  color: white;
+}
+
+.active4 {
+  display: inline-block;
+}
+.active5 {
+  display: none;
+}
