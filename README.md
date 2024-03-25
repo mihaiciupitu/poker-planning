@@ -6,4 +6,4 @@
 - [Gioni Cornea](https://github.com/gionicornea)
 
 ## Live 
- [Live Link](mihaiciupitu.github.io/poker-planning)
+ [Live Link](https://mihaiciupitu.github.io/poker-planning/)
