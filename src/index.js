@@ -28,6 +28,7 @@ card.forEach((element) => {
       revealbutton.classList.add("active5");
       pick.classList.add("active4");
       pick.classList.remove("active5");
+      chosencard.innerHTML = "";
     }
   });
 });
@@ -45,16 +46,15 @@ revealbutton.addEventListener("click", (e) => {
   revealbutton.classList.remove("active4");
   playagain.classList.add("active3");
   playagain.classList.remove("active2");
-  card.forEach((element) => {
-    if (element.classList.contains("active")) {
-      chosencard.innerHTML = element.innerHTML;
-      chosencard.style.color = "white";
-    }
-  });
+  const activeCard = document.querySelector(".card.active");
+  if (activeCard) {
+    chosencard.innerHTML = activeCard.innerHTML;
+    chosencard.style.color = "white";
+    socket.emit("cardValue", chosencard.innerHTML);
+  }
   card.forEach((element) => {
     element.classList.add("active2");
   });
-
   average.classList.add("active4");
 });
 playagain.addEventListener("click", (e) => {
@@ -101,6 +101,24 @@ function getAverage() {
   });
 }
 
+function displayCards() {
+  socket.on("Usernames", (usernames) => {
+    if (usernames.length > 1) {
+      socket.on("SelectedCard", handleSelectedCard);
+    } else {
+      chosencard.innerHTML = "";
+      socket.off("SelectedCard", handleSelectedCard);
+    }
+  });
+}
+
+function handleSelectedCard(card) {
+  const div = document.createElement("div");
+  div.innerHTML = card;
+  div.classList.add("chosen-cards2");
+  chosencard.appendChild(div);
+}
+
 function displayUsers() {
   socket.on("Usernames", (usernames) => {
     user.innerHTML = "Connected users : ";
@@ -112,7 +130,7 @@ function displayUsers() {
     });
   });
 }
-
+displayCards();
 displayUsers();
 getAverage();
 getName();

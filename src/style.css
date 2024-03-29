@@ -95,3 +95,19 @@
 li {
   list-style-type: none;
 }
+.chosen-cards2 {
+  background-color: black;
+  width: 60px;
+  height: 100px;
+  border-radius: 15%;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  top: 180px;
+}
+.chosen-cards-visible {
+  color: white;
+}
