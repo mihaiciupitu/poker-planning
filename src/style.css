@@ -92,3 +92,6 @@
 .active5 {
   display: none;
 }
+li {
+  list-style-type: none;
+}

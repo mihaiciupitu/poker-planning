@@ -6,10 +6,12 @@ const revealbutton = document.querySelector(".reveal-cards");
 const playagain = document.querySelector(".play-again");
 const average = document.querySelector(".average");
 const pick = document.querySelector(".pick");
+const user = document.querySelector(".usernames");
 
 card.forEach((element) => {
   element.addEventListener("click", (e) => {
     element.classList.toggle("active");
+
     if (element.classList.contains("active")) {
       chosencard.classList.add("active");
       revealbutton.classList.add("active4");
@@ -17,7 +19,10 @@ card.forEach((element) => {
       pick.classList.remove("active4");
       revealbutton.classList.remove("active5");
       revealbutton.classList.remove("active2");
-      socket.emit("cardValue", element.innerHTML);
+      chosencard.innerHTML = element.innerHTML;
+      chosencard.style.color = "black";
+      const selectedCard = chosencard.innerHTML;
+      socket.emit("cardValue", selectedCard);
     } else {
       chosencard.classList.remove("active");
       revealbutton.classList.add("active5");
@@ -43,6 +48,7 @@ revealbutton.addEventListener("click", (e) => {
   card.forEach((element) => {
     if (element.classList.contains("active")) {
       chosencard.innerHTML = element.innerHTML;
+      chosencard.style.color = "white";
     }
   });
   card.forEach((element) => {
@@ -61,8 +67,11 @@ playagain.addEventListener("click", (e) => {
     element.classList.remove("active2");
   });
   average.classList.remove("active4");
-  average.innerHTML = "Average : " + chosencard.innerHTML;
+  socket.emit("resetAverage");
 });
+
+// Client Side Code
+
 const socket = io("http://localhost:3000");
 
 socket.on("connect", () => {
@@ -91,9 +100,20 @@ function getAverage() {
     average.innerHTML = "The average is : " + media;
   });
 }
+
 function displayUsers() {
-  socket.on("display", (display) => {});
+  socket.on("Usernames", (usernames) => {
+    user.innerHTML = "Connected users : ";
+
+    usernames.forEach((username) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = username;
+      user.appendChild(listItem);
+    });
+  });
 }
+
+displayUsers();
 getAverage();
 getName();
 sendName();
