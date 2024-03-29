@@ -21,8 +21,8 @@ card.forEach((element) => {
       revealbutton.classList.remove("active2");
       chosencard.innerHTML = element.innerHTML;
       chosencard.style.color = "black";
-      const selectedCard = chosencard.innerHTML;
-      socket.emit("cardValue", selectedCard);
+
+      socket.emit("cardValue", chosencard.innerHTML);
     } else {
       chosencard.classList.remove("active");
       revealbutton.classList.add("active5");
