@@ -10,8 +10,12 @@ const user = document.querySelector(".usernames");
 
 card.forEach((element) => {
   element.addEventListener("click", (e) => {
-    element.classList.toggle("active");
+    e.stopPropagation();
+    card.forEach((card) => {
+      card.classList.remove("active");
+    });
 
+    element.classList.add("active");
     if (element.classList.contains("active")) {
       chosencard.classList.add("active");
       revealbutton.classList.add("active4");
@@ -39,19 +43,27 @@ document.addEventListener("click", (e) => {
       element.classList.remove("active");
     }
   });
+  chosencard.classList.remove("active");
 });
 
 revealbutton.addEventListener("click", (e) => {
+  e.stopPropagation();
   revealbutton.classList.add("active2");
   revealbutton.classList.remove("active4");
   playagain.classList.add("active3");
   playagain.classList.remove("active2");
+
   const activeCard = document.querySelector(".card.active");
   if (activeCard) {
     chosencard.innerHTML = activeCard.innerHTML;
     chosencard.style.color = "white";
     socket.emit("cardValue", chosencard.innerHTML);
   }
+  const card2 = document.querySelector(".chosen-cards2");
+  if (card2) {
+    card2.style.color = "white";
+  }
+
   card.forEach((element) => {
     element.classList.add("active2");
   });
@@ -116,6 +128,7 @@ function handleSelectedCard(card) {
   const div = document.createElement("div");
   div.innerHTML = card;
   div.classList.add("chosen-cards2");
+
   chosencard.appendChild(div);
 }
 
