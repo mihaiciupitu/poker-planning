@@ -25,8 +25,6 @@ card.forEach((element) => {
       revealbutton.classList.remove("active2");
       chosencard.innerHTML = element.innerHTML;
       chosencard.style.color = "black";
-
-      socket.emit("cardValue", chosencard.innerHTML);
     } else {
       chosencard.classList.remove("active");
       revealbutton.classList.add("active5");
@@ -44,6 +42,7 @@ document.addEventListener("click", (e) => {
     }
   });
   chosencard.classList.remove("active");
+  chosencard.innerHTML = "";
 });
 
 revealbutton.addEventListener("click", (e) => {
