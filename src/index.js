@@ -1,6 +1,6 @@
 import "./style.css";
 import { io } from "socket.io-client";
-const card = document.querySelectorAll(".card");
+const cards = document.querySelectorAll(".card");
 const chosencard = document.querySelector(".chosen-cards");
 const revealbutton = document.querySelector(".reveal-cards");
 const playagain = document.querySelector(".play-again");
@@ -8,35 +8,28 @@ const average = document.querySelector(".average");
 const pick = document.querySelector(".pick");
 const user = document.querySelector(".usernames");
 
-card.forEach((element) => {
+cards.forEach((element) => {
   element.addEventListener("click", (e) => {
     e.stopPropagation();
-    card.forEach((card) => {
-      card.classList.remove("active");
+    cards.forEach((element) => {
+      element.classList.remove("active");
     });
 
     element.classList.add("active");
-    if (element.classList.contains("active")) {
-      chosencard.classList.add("active");
-      revealbutton.classList.add("active4");
-      pick.classList.add("active5");
-      pick.classList.remove("active4");
-      revealbutton.classList.remove("active5");
-      revealbutton.classList.remove("active2");
-      chosencard.innerHTML = element.innerHTML;
-      chosencard.style.color = "black";
-    } else {
-      chosencard.classList.remove("active");
-      revealbutton.classList.add("active5");
-      pick.classList.add("active4");
-      pick.classList.remove("active5");
-      chosencard.innerHTML = "";
-    }
+
+    chosencard.classList.add("active");
+    revealbutton.classList.add("active4");
+    pick.classList.add("active5");
+    pick.classList.remove("active4");
+    revealbutton.classList.remove("active5");
+    revealbutton.classList.remove("active2");
+    chosencard.innerHTML = element.innerHTML;
+    chosencard.style.color = "black";
   });
 });
 
 document.addEventListener("click", (e) => {
-  card.forEach((element) => {
+  cards.forEach((element) => {
     if (e.target != element) {
       element.classList.remove("active");
     }
@@ -63,7 +56,7 @@ revealbutton.addEventListener("click", (e) => {
     card2.style.color = "white";
   }
 
-  card.forEach((element) => {
+  cards.forEach((element) => {
     element.classList.add("active2");
   });
   average.classList.add("active4");
@@ -74,7 +67,7 @@ playagain.addEventListener("click", (e) => {
   pick.classList.add("active4");
   pick.classList.remove("active5");
   chosencard.innerHTML = "";
-  card.forEach((element) => {
+  cards.forEach((element) => {
     element.classList.remove("active2");
   });
   average.classList.remove("active4");
@@ -104,7 +97,7 @@ function getName() {
 }
 function sendName() {
   let username = document.querySelector("#name").innerHTML;
-  socket.emit("Username", username);
+  socket.emit("SendUsername", username);
 }
 function getAverage() {
   socket.on("Average", (media) => {
@@ -113,7 +106,7 @@ function getAverage() {
 }
 
 function displayCards() {
-  socket.on("Usernames", (usernames) => {
+  socket.on("UsernamesConnected", (usernames) => {
     if (usernames.length > 1) {
       socket.on("SelectedCard", handleSelectedCard);
     } else {
@@ -132,7 +125,7 @@ function handleSelectedCard(card) {
 }
 
 function displayUsers() {
-  socket.on("Usernames", (usernames) => {
+  socket.on("UsernamesConnected", (usernames) => {
     user.innerHTML = "Connected users : ";
 
     usernames.forEach((username) => {
