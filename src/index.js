@@ -1,35 +1,40 @@
 import "./style.css";
 import { io } from "socket.io-client";
-const cards = document.querySelectorAll(".card");
+const possibleCards = document.querySelectorAll(".card");
 const chosencard = document.querySelector(".chosen-cards");
 const revealbutton = document.querySelector(".reveal-cards");
 const playagain = document.querySelector(".play-again");
 const average = document.querySelector(".average");
 const pick = document.querySelector(".pick");
 const user = document.querySelector(".usernames");
+const cards = document.querySelector(".cards");
 
-cards.forEach((element) => {
+possibleCards.forEach((element) => {
   element.addEventListener("click", (e) => {
     e.stopPropagation();
-    cards.forEach((element) => {
-      element.classList.remove("active");
-    });
-
-    element.classList.add("active");
-
-    chosencard.classList.add("active");
-    revealbutton.classList.add("active4");
-    pick.classList.add("active5");
-    pick.classList.remove("active4");
-    revealbutton.classList.remove("active5");
-    revealbutton.classList.remove("active2");
-    chosencard.innerHTML = element.innerHTML;
-    chosencard.style.color = "black";
+    handleCardClick(element);
   });
 });
 
+function handleCardClick(element) {
+  possibleCards.forEach((card) => {
+    card.classList.remove("active");
+  });
+
+  element.classList.add("active");
+  chosencard.classList.add("active");
+  revealbutton.classList.add("active4");
+  pick.classList.add("active5");
+  pick.classList.remove("active4");
+  revealbutton.classList.remove("active5");
+  revealbutton.classList.remove("active2");
+  chosencard.innerHTML = element.innerHTML;
+  chosencard.style.color = "black";
+  socket.emit("cardValue", chosencard.innerHTML);
+}
+
 document.addEventListener("click", (e) => {
-  cards.forEach((element) => {
+  possibleCards.forEach((element) => {
     if (e.target != element) {
       element.classList.remove("active");
     }
@@ -38,8 +43,7 @@ document.addEventListener("click", (e) => {
   chosencard.innerHTML = "";
 });
 
-revealbutton.addEventListener("click", (e) => {
-  e.stopPropagation();
+function handleRevealButtonClick() {
   revealbutton.classList.add("active2");
   revealbutton.classList.remove("active4");
   playagain.classList.add("active3");
@@ -47,31 +51,66 @@ revealbutton.addEventListener("click", (e) => {
 
   const activeCard = document.querySelector(".card.active");
   if (activeCard) {
-    chosencard.innerHTML = activeCard.innerHTML;
-    chosencard.style.color = "white";
-    socket.emit("cardValue", chosencard.innerHTML);
+    updateChosenCard(activeCard.innerHTML);
   }
+
+  updateChosenCards2();
+
+  activatePossibleCards();
+  average.classList.add("active4");
+}
+
+function updateChosenCard(content) {
+  chosencard.innerHTML = content;
+  chosencard.style.color = "white";
+  socket.emit("cardValue", content);
+}
+
+function updateChosenCards2() {
   const card2 = document.querySelector(".chosen-cards2");
   if (card2) {
     card2.style.color = "white";
+    card2.classList.remove("active5");
   }
+}
 
-  cards.forEach((element) => {
+function activatePossibleCards() {
+  possibleCards.forEach((element) => {
     element.classList.add("active2");
   });
-  average.classList.add("active4");
+}
+
+revealbutton.addEventListener("click", (e) => {
+  e.stopPropagation();
+  handleRevealButtonClick();
 });
-playagain.addEventListener("click", (e) => {
+function handlePlayAgainClick() {
   playagain.classList.add("active2");
   playagain.classList.remove("active3");
   pick.classList.add("active4");
   pick.classList.remove("active5");
   chosencard.innerHTML = "";
-  cards.forEach((element) => {
-    element.classList.remove("active2");
-  });
+  deactivatePossibleCards();
+  resetChosenCards2();
   average.classList.remove("active4");
   socket.emit("resetAverage");
+}
+
+function deactivatePossibleCards() {
+  possibleCards.forEach((element) => {
+    element.classList.remove("active2");
+  });
+}
+
+function resetChosenCards2() {
+  const card2 = document.querySelector(".chosen-cards2");
+  if (card2) {
+    card2.classList.add("active5");
+  }
+}
+
+playagain.addEventListener("click", (e) => {
+  handlePlayAgainClick();
 });
 
 // Client Side Code
@@ -117,11 +156,13 @@ function displayCards() {
 }
 
 function handleSelectedCard(card) {
-  const div = document.createElement("div");
-  div.innerHTML = card;
-  div.classList.add("chosen-cards2");
+  if (!document.querySelector(".chosen-cards2")) {
+    const div = document.createElement("div");
+    div.innerHTML = card;
+    div.classList.add("chosen-cards2");
 
-  chosencard.appendChild(div);
+    cards.appendChild(div);
+  }
 }
 
 function displayUsers() {

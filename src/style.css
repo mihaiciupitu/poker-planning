@@ -90,7 +90,7 @@
   display: inline-block;
 }
 .active5 {
-  display: none;
+  display: none !important;
 }
 li {
   list-style-type: none;
