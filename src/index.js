@@ -56,7 +56,7 @@ function handleRevealButtonClick() {
 
   updateChosenCards2();
 
-  activatePossibleCards();
+  deactivatePossibleCards();
   average.classList.add("active4");
 }
 
@@ -74,7 +74,7 @@ function updateChosenCards2() {
   }
 }
 
-function activatePossibleCards() {
+function deactivatePossibleCards() {
   possibleCards.forEach((element) => {
     element.classList.add("active2");
   });
