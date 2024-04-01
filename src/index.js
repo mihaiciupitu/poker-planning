@@ -70,8 +70,8 @@ function updateChosenCards2() {
   const card2 = document.querySelector(".chosen-cards2");
   if (card2) {
     card2.style.color = "white";
-    card2.classList.remove("active5");
   }
+  card2.classList.remove("active5");
 }
 
 function deactivatePossibleCards() {
@@ -90,13 +90,14 @@ function handlePlayAgainClick() {
   pick.classList.add("active4");
   pick.classList.remove("active5");
   chosencard.innerHTML = "";
-  deactivatePossibleCards();
+  activatePossibleCards();
   resetChosenCards2();
+
   average.classList.remove("active4");
   socket.emit("resetAverage");
 }
 
-function deactivatePossibleCards() {
+function activatePossibleCards() {
   possibleCards.forEach((element) => {
     element.classList.remove("active2");
   });
@@ -105,7 +106,8 @@ function deactivatePossibleCards() {
 function resetChosenCards2() {
   const card2 = document.querySelector(".chosen-cards2");
   if (card2) {
-    card2.classList.add("active5");
+    card2.classList.remove("chosen-cards2");
+    card2.innerHTML = "";
   }
 }
 
