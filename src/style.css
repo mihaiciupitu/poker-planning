@@ -17,7 +17,7 @@
   align-items: center;
   text-align: center;
 }
-.chosen-cards {
+.chosen-cards0 {
   background-color: grey;
   width: 60px;
   height: 100px;
@@ -28,6 +28,7 @@
   text-align: center;
   align-items: center;
 }
+
 .possible-cards ul {
   list-style: none;
 
@@ -107,6 +108,19 @@
 li {
   list-style-type: none;
 }
+.chosen-cards1 {
+  background-color: black;
+  width: 60px;
+  height: 100px;
+  border-radius: 15%;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  top: 120px;
+}
 .chosen-cards2 {
   background-color: black;
   width: 60px;
@@ -118,8 +132,10 @@ li {
   text-align: center;
   align-items: center;
   position: absolute;
-  top: 180px;
+  top: 280px;
+  left: 600px;
 }
+
 .chosen-cards-visible {
   color: white;
 }

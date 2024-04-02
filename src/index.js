@@ -1,7 +1,7 @@
 import "./style.css";
 import { io } from "socket.io-client";
 const possibleCards = document.querySelectorAll(".card");
-const chosencard = document.querySelector(".chosen-cards");
+const chosencard = document.querySelector(".chosen-cards0");
 const revealbutton = document.querySelector(".reveal-cards");
 const playagain = document.querySelector(".play-again");
 const average = document.querySelector(".average");
@@ -9,8 +9,11 @@ const pick = document.querySelector(".pick");
 const user = document.querySelector(".usernames");
 const cards = document.querySelector(".cards");
 const possibleCardsContainer = document.querySelector(".possible-cards");
+let counter = 1;
+let selectedCardCount = 0;
 
 let usersVoted = [];
+let usersVotedUpdated = new Array(possibleCards.length).fill(false);
 // Events
 possibleCards.forEach((element) => {
   element.addEventListener("click", (e) => {
@@ -32,7 +35,6 @@ function handleCardClick(element) {
     console.log("The user already voted");
     alert("You already voted");
 
-    console.log(usersVoted);
     return;
   } else {
     element.classList.add("active");
@@ -44,8 +46,10 @@ function handleCardClick(element) {
     revealbutton.classList.remove("inactive");
     chosencard.innerHTML = element.innerHTML;
     chosencard.classList.add("black-text");
-
+    usersVotedUpdated[selectedCardCount - 1] = true;
+    console.log(usersVotedUpdated);
     socket.emit("cardValue", chosencard.innerHTML);
+    selectedCardCount++;
   }
 }
 
@@ -57,10 +61,8 @@ function handleRevealButtonClick() {
 
   const activeCard = document.querySelector(".card.active");
   if (activeCard) {
-    updateChosenCard(activeCard.innerHTML);
+    whiteningAndEmittingChosenCard(activeCard.innerHTML);
   }
-
-  updateChosenCards2();
 
   deactivatePossibleCards();
   possibleCards.forEach((element) => {
@@ -69,19 +71,14 @@ function handleRevealButtonClick() {
   average.classList.add("display");
 }
 
-function updateChosenCard(content) {
-  chosencard.innerHTML = content;
-  chosencard.classList.add("white-text");
-  chosencard.classList.remove("black-text");
-  socket.emit("cardValue", content);
-}
-
-function updateChosenCards2() {
-  const card2 = document.querySelector(".chosen-cards2");
-  if (card2) {
+function whiteningAndEmittingChosenCard(content) {
+  for (let i = 0; i < counter; i++) {
+    const card2 = document.querySelector(`.chosen-cards${i}`);
+    card2.innerHTML = content;
     card2.classList.add("white-text");
-    card2.classList.remove("inactive-important");
+    card2.classList.remove("black-text");
   }
+  socket.emit("cardValue", content);
 }
 
 function deactivatePossibleCards() {
@@ -94,11 +91,14 @@ function handlePlayAgainClick() {
   pick.classList.remove("inactive-important");
   chosencard.innerHTML = "";
   activatePossibleCards();
-  resetChosenCards2();
+  resetChosenCards();
   average.classList.remove("display");
   socket.emit("resetAverage");
   usersVoted = [];
-  // Remove "active" class from all cards
+
+  usersVotedUpdated = new Array(counter).fill(false);
+  counter = 1;
+  selectedCardCount = 0;
   possibleCards.forEach((card) => {
     card.classList.remove("active");
   });
@@ -110,11 +110,17 @@ function activatePossibleCards() {
   possibleCardsContainer.classList.remove("inactive");
 }
 
-function resetChosenCards2() {
-  const card2 = document.querySelector(".chosen-cards2");
-  if (card2) {
-    card2.classList.remove("chosen-cards2");
-    card2.innerHTML = "";
+function resetChosenCards() {
+  for (let i = 1; i < counter; i++) {
+    const card = document.querySelector(`.chosen-cards${i}`);
+    if (card) {
+      card.classList.remove(`chosen-cards${i}`);
+
+      card.innerHTML = "";
+      console.log(`Reset card ${i}`);
+    } else {
+      console.log(`Card ${i} not found`);
+    }
   }
 }
 
@@ -157,33 +163,44 @@ function ListenWhenUsersConnectedAndVoted() {
   socket.on("UsernamesConnected", (usernames) => {
     if (usernames.length > 1) {
       socket.on("SelectedCard", (data) => {
-        const username = data.name;
-        const user = usernames.find((user) => user.name === username);
-        const socketID = user.socketID;
-        if (!usersVoted.includes(user.socketID)) {
-          if (user) {
+        // Get the name of the user who selected the card
+        const name = data.name;
+        // Check if the user who selected the card is in the list of connected usernames
+        if (usernames.find((user) => user.name === name)) {
+          // Get the socket ID of the user who selected the card
+          const socketID = usernames.find(
+            (user) => user.name === name
+          ).socketID;
+          // Check if the user has not already voted and the card for this user has not been added
+          if (
+            !usersVoted.includes(socketID) &&
+            !usersVotedUpdated[counter - 1]
+          ) {
+            // Add the user's socket ID to the list of voted users
             usersVoted.push(socketID);
-
+            // Update the voted status for this user's card
+            usersVotedUpdated[counter - 1] = true;
             addCard(data.card);
-            console.log("User Added once");
             displayUsersWhoVoted();
           }
         }
       });
     } else {
       chosencard.innerHTML = "";
+      resetChosenCards();
+      console.log("else");
       socket.off("SelectedCard", addCard);
     }
   });
 }
 function addCard(card) {
-  if (!document.querySelector(".chosen-cards2")) {
-    const div = document.createElement("div");
-    div.innerHTML = card;
-    div.classList.add("chosen-cards2");
-
-    cards.appendChild(div);
-  }
+  const cardID = "card-" + counter;
+  const div = document.createElement("div");
+  div.innerHTML = card;
+  div.id = cardID;
+  div.classList.add(`chosen-cards${counter}`);
+  cards.appendChild(div);
+  counter++;
 }
 function displayUsers() {
   socket.on("UsernamesConnected", (usernames) => {
