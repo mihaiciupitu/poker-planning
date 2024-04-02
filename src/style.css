@@ -75,22 +75,34 @@
   font-size: 40px;
   display: none;
 }
-.active2 {
+.inactive {
   background-color: gray;
   color: white;
   display: none;
 }
-.active3 {
+.white-text {
+  color: white;
+}
+.black-text {
+  color: black !important;
+}
+.display-grey {
   display: inline-block;
   background-color: gray;
   color: white;
 }
 
-.active4 {
+.display {
   display: inline-block;
 }
-.active5 {
+.inactive-important {
   display: none !important;
+}
+.voted {
+  color: red;
+}
+.non-voted {
+  color: blue;
 }
 li {
   list-style-type: none;
