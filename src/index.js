@@ -10,6 +10,7 @@ const user = document.querySelector(".usernames");
 const cards = document.querySelector(".cards");
 const possibleCardsContainer = document.querySelector(".possible-cards");
 
+let usersVoted = [];
 // Events
 possibleCards.forEach((element) => {
   element.addEventListener("click", (e) => {
@@ -25,32 +26,27 @@ playagain.addEventListener("click", (e) => {
   handlePlayAgainClick();
 });
 
-document.addEventListener("click", (e) => {
-  possibleCards.forEach((element) => {
-    if (e.target != element) {
-      element.classList.remove("active");
-    }
-  });
-  chosencard.classList.remove("active");
-  chosencard.innerHTML = "";
-});
-
 //Functions
 function handleCardClick(element) {
-  possibleCards.forEach((card) => {
-    card.classList.remove("active");
-  });
-  // try to make it faster with removing active from the previously chosen element
-  element.classList.add("active");
-  chosencard.classList.add("active");
-  revealbutton.classList.add("display");
-  pick.classList.add("inactive-important");
-  pick.classList.remove("display");
-  revealbutton.classList.remove("inactive-important");
-  revealbutton.classList.remove("inactive");
-  chosencard.innerHTML = element.innerHTML;
-  chosencard.classList.add("black-text");
-  socket.emit("cardValue", chosencard.innerHTML);
+  if (usersVoted.includes(socket.id)) {
+    return;
+  } else {
+    possibleCards.forEach((card) => {
+      card.classList.remove("active");
+    });
+    // try to make it faster with removing active from the previously chosen element
+    element.classList.add("active");
+    chosencard.classList.add("active");
+    revealbutton.classList.add("display");
+    pick.classList.add("inactive-important");
+    pick.classList.remove("display");
+    revealbutton.classList.remove("inactive-important");
+    revealbutton.classList.remove("inactive");
+    chosencard.innerHTML = element.innerHTML;
+    chosencard.classList.add("black-text");
+
+    socket.emit("cardValue", chosencard.innerHTML);
+  }
 }
 
 function handleRevealButtonClick() {
@@ -125,7 +121,6 @@ socket.on("connect", () => {
 socket.on("disconnect", () => {
   console.log("Disconnected from server");
 });
-// save username on localstorage
 
 function getName() {
   const userName =
@@ -151,18 +146,30 @@ function getAverage() {
 }
 // rename to ListenWhenUsersConnected /// 159 -- addCard
 // add user simple , voted, discovered  classes , make distinction on who voted or did not voted based on id's
-function ListenWhenUsersConnected() {
+
+function ListenWhenUsersConnectedAndVoted() {
   socket.on("UsernamesConnected", (usernames) => {
+    console.log("Received usernames:", usernames.length);
     if (usernames.length > 1) {
-      socket.on("SelectedCard", addCard);
-      console.log(user.firstChild);
+      socket.on("SelectedCard", (data) => {
+        const username = data.name;
+        const user = usernames.find((user) => user.name === username);
+        if (!usersVoted.includes(user.socketID)) {
+          if (user) {
+            const socketID = user.socketID;
+            usersVoted.push(socketID);
+            addCard(data.card);
+          }
+        } else {
+          console.log("you already voted");
+        }
+      });
     } else {
       chosencard.innerHTML = "";
       socket.off("SelectedCard", addCard);
     }
   });
 }
-
 function addCard(card) {
   if (!document.querySelector(".chosen-cards2")) {
     const div = document.createElement("div");
@@ -172,19 +179,19 @@ function addCard(card) {
     cards.appendChild(div);
   }
 }
-
 function displayUsers() {
   socket.on("UsernamesConnected", (usernames) => {
     user.innerHTML = "Connected users : ";
 
     usernames.forEach((username) => {
       const listItem = document.createElement("li");
-      listItem.textContent = username;
+      listItem.textContent = username.name;
       user.appendChild(listItem);
     });
   });
 }
-ListenWhenUsersConnected();
+
+ListenWhenUsersConnectedAndVoted();
 displayUsers();
 getAverage();
 getName();
