@@ -35,10 +35,6 @@ function handleCardClick(element) {
     console.log(usersVoted);
     return;
   } else {
-    possibleCards.forEach((card) => {
-      card.classList.remove("active");
-    });
-    // try to make it faster with removing active from the previously chosen element
     element.classList.add("active");
     chosencard.classList.add("active");
     revealbutton.classList.add("display");
@@ -156,8 +152,6 @@ function getAverage() {
     average.innerHTML = "The average is : " + media;
   });
 }
-// rename to ListenWhenUsersConnected /// 159 -- addCard
-// add user simple , voted, discovered  classes , make distinction on who voted or did not voted based on id's
 
 function ListenWhenUsersConnectedAndVoted() {
   socket.on("UsernamesConnected", (usernames) => {
