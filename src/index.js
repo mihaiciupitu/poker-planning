@@ -29,6 +29,10 @@ playagain.addEventListener("click", (e) => {
 //Functions
 function handleCardClick(element) {
   if (usersVoted.includes(socket.id)) {
+    console.log("The user already voted");
+    alert("You already voted");
+
+    console.log(usersVoted);
     return;
   } else {
     possibleCards.forEach((card) => {
@@ -63,6 +67,9 @@ function handleRevealButtonClick() {
   updateChosenCards2();
 
   deactivatePossibleCards();
+  possibleCards.forEach((element) => {
+    element.classList.remove("active");
+  });
   average.classList.add("display");
 }
 
@@ -84,7 +91,6 @@ function updateChosenCards2() {
 function deactivatePossibleCards() {
   possibleCardsContainer.classList.add("inactive");
 }
-
 function handlePlayAgainClick() {
   playagain.classList.add("inactive");
   playagain.classList.remove("display-grey");
@@ -93,11 +99,17 @@ function handlePlayAgainClick() {
   chosencard.innerHTML = "";
   activatePossibleCards();
   resetChosenCards2();
-
   average.classList.remove("display");
   socket.emit("resetAverage");
+  usersVoted = [];
+  // Remove "active" class from all cards
+  possibleCards.forEach((card) => {
+    card.classList.remove("active");
+  });
+  document.querySelectorAll("li").forEach((element) => {
+    element.classList.remove("voted");
+  });
 }
-
 function activatePossibleCards() {
   possibleCardsContainer.classList.remove("inactive");
 }
@@ -149,19 +161,19 @@ function getAverage() {
 
 function ListenWhenUsersConnectedAndVoted() {
   socket.on("UsernamesConnected", (usernames) => {
-    console.log("Received usernames:", usernames.length);
     if (usernames.length > 1) {
       socket.on("SelectedCard", (data) => {
         const username = data.name;
         const user = usernames.find((user) => user.name === username);
+        const socketID = user.socketID;
         if (!usersVoted.includes(user.socketID)) {
           if (user) {
-            const socketID = user.socketID;
             usersVoted.push(socketID);
+
             addCard(data.card);
+            console.log("User Added once");
+            displayUsersWhoVoted();
           }
-        } else {
-          console.log("you already voted");
         }
       });
     } else {
@@ -186,11 +198,17 @@ function displayUsers() {
     usernames.forEach((username) => {
       const listItem = document.createElement("li");
       listItem.textContent = username.name;
+      listItem.dataset.data = username.socketID;
       user.appendChild(listItem);
     });
   });
 }
-
+function displayUsersWhoVoted() {
+  document.querySelectorAll("li").forEach((element) => {
+    if (usersVoted.find((vote) => vote === element.dataset.data))
+      element.classList.add("voted");
+  });
+}
 ListenWhenUsersConnectedAndVoted();
 displayUsers();
 getAverage();
