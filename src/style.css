@@ -173,6 +173,11 @@ li {
   top: 280px;
   left: 600px;
 }
+.chosen-cards2 {
+  background-color: black;
+  width: 60px;
+  height: 100px;
+}
 .chosen-cards3 {
   background-color: black;
   width: 60px;

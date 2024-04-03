@@ -44,18 +44,19 @@ function handleCardClick(element) {
     pick.classList.remove("display");
     revealbutton.classList.remove("inactive-important");
     revealbutton.classList.remove("inactive");
-    chosencard.innerHTML = element.innerHTML;
-    chosencard.classList.add("black-text");
-    userChosenCards[socket.id] = chosencard;
-    usersVoted.push(socket.id);
-    addedCards.push(chosencard.innerHTML);
 
-    console.log(addedCards);
-    socket.emit("cardValue", chosencard.innerHTML);
+    // Add the selected card's value to the addedCards array
+
+    // Emit the selected card value to the server
+    socket.emit("cardValue", element.innerHTML);
     socket.emit("updateCardValue", {
       socketId: socket.id,
-      card: chosencard.innerHTML,
+      card: element.innerHTML,
     });
+
+    // Update the display of users who voted
+    usersVoted.push(socket.id);
+    displayUsersWhoVoted();
   }
 }
 
@@ -69,6 +70,9 @@ function handleRevealButtonClick() {
   if (activeCard) {
     whiteningAndEmittingChosenCard(activeCard.innerHTML);
   }
+
+  // Clear the addedCards array
+  addedCards = [];
 
   deactivatePossibleCards();
   possibleCards.forEach((element) => {
@@ -145,21 +149,33 @@ socket.on("connect", () => {
 socket.on("disconnect", () => {
   console.log("Disconnected from server");
 });
-socket.on("updateCardValue", (data) => {
-  const { socketId, card } = data;
+function ListenWhenUsersVoted() {
+  socket.on("SelectedCard", (data) => {
+    const socketID = data.socketID;
 
-  // Check if the received socket ID is different from the current user's socket ID
-  if (socketId !== socket.id) {
-    // Retrieve the corresponding chosen card element based on the sender's socket ID
-    const cardElement = userChosenCards[socketId];
+    if (!usersVoted.includes(socketID)) {
+      // Only add the user to the list of voted users if they haven't voted before
+      usersVoted.push(socketID);
+      displayUsersWhoVoted();
 
-    if (cardElement) {
-      // Update the chosen card element with the received card value
-      cardElement.innerHTML = card;
+      // Display the card for each user if there are 4 or fewer users
+      if (usersVoted.length <= 4) {
+        addCard(data.card, data.name);
+      }
     }
-  }
-});
+  });
 
+  // Listen for the updateCardValue event to update the chosen card's value
+  socket.on("updateCardValue", (data) => {
+    const socketID = data.socketID;
+    const cardValue = data.card;
+
+    // Update the chosen card's value if it belongs to the current user
+    if (socketID === socket.id) {
+      chosencard.innerHTML = cardValue;
+    }
+  });
+}
 function getName() {
   const userName =
     localStorage.getItem("userName") || prompt("Please enter your name:");
@@ -182,25 +198,7 @@ function getAverage() {
     average.innerHTML = "The average is : " + media;
   });
 }
-function ListenWhenUsersVoted() {
-  socket.on("SelectedCard", (data) => {
-    const socketID = data.socketID;
 
-    if (usersVoted.includes(socketID)) {
-      // User has already voted
-      return;
-    } else {
-      // Handle case where usersVoted is not empty but current user has not voted
-      usersVoted.push(socketID);
-      displayUsersWhoVoted();
-
-      // Display the card for each user if there are 4 or less users
-      if (usersVoted.length <= 4) {
-        addCard(data.card, data.name);
-      }
-    }
-  });
-}
 function addCard(card, dataName) {
   const cardContainer = document.createElement("div");
   const cardDiv = document.createElement("div");
