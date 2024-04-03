@@ -10,10 +10,9 @@ const user = document.querySelector(".usernames");
 const cards = document.querySelector(".cards");
 const possibleCardsContainer = document.querySelector(".possible-cards");
 let counter = 1;
-let selectedCardCount = 0;
 
 let usersVoted = [];
-let usersVotedUpdated = new Array(possibleCards.length).fill(false);
+
 // Events
 possibleCards.forEach((element) => {
   element.addEventListener("click", (e) => {
@@ -46,10 +45,10 @@ function handleCardClick(element) {
     revealbutton.classList.remove("inactive");
     chosencard.innerHTML = element.innerHTML;
     chosencard.classList.add("black-text");
-    usersVotedUpdated[selectedCardCount - 1] = true;
-    console.log(usersVotedUpdated);
+
+    usersVoted.push(socket.id);
+
     socket.emit("cardValue", chosencard.innerHTML);
-    selectedCardCount++;
   }
 }
 
@@ -96,9 +95,7 @@ function handlePlayAgainClick() {
   socket.emit("resetAverage");
   usersVoted = [];
 
-  usersVotedUpdated = new Array(counter).fill(false);
   counter = 1;
-  selectedCardCount = 0;
   possibleCards.forEach((card) => {
     card.classList.remove("active");
   });
@@ -113,9 +110,11 @@ function activatePossibleCards() {
 function resetChosenCards() {
   for (let i = 1; i < counter; i++) {
     const card = document.querySelector(`.chosen-cards${i}`);
+    const name = document.querySelector(`chosen-name${i}`);
     if (card) {
       card.classList.remove(`chosen-cards${i}`);
-
+      name.classList.remove(`chosen-name${i}`);
+      name.innerHTML = "";
       card.innerHTML = "";
       console.log(`Reset card ${i}`);
     } else {
@@ -158,48 +157,34 @@ function getAverage() {
     average.innerHTML = "The average is : " + media;
   });
 }
+function ListenWhenUsersVoted() {
+  socket.on("SelectedCard", (data) => {
+    const socketID = data.socketID;
 
-function ListenWhenUsersConnectedAndVoted() {
-  socket.on("UsernamesConnected", (usernames) => {
-    if (usernames.length > 1) {
-      socket.on("SelectedCard", (data) => {
-        // Get the name of the user who selected the card
-        const name = data.name;
-        // Check if the user who selected the card is in the list of connected usernames
-        if (usernames.find((user) => user.name === name)) {
-          // Get the socket ID of the user who selected the card
-          const socketID = usernames.find(
-            (user) => user.name === name
-          ).socketID;
-          // Check if the user has not already voted and the card for this user has not been added
-          if (
-            !usersVoted.includes(socketID) &&
-            !usersVotedUpdated[counter - 1]
-          ) {
-            // Add the user's socket ID to the list of voted users
-            usersVoted.push(socketID);
-            // Update the voted status for this user's card
-            usersVotedUpdated[counter - 1] = true;
-            addCard(data.card);
-            displayUsersWhoVoted();
-          }
-        }
-      });
+    if (usersVoted.includes(socketID)) {
+      // User has already voted
+      return;
     } else {
-      chosencard.innerHTML = "";
-      resetChosenCards();
-      console.log("else");
-      socket.off("SelectedCard", addCard);
+      // Handle case where usersVoted is not empty but current user has not voted
+      usersVoted.push(socketID);
+      displayUsersWhoVoted();
+
+      // Display the card for each user if there are 4 or less users
+      if (usersVoted.length < 4) {
+        addCard(data.card, data.name);
+      }
     }
   });
 }
-function addCard(card) {
-  const cardID = "card-" + counter;
+function addCard(card, dataName) {
   const div = document.createElement("div");
+  const name = document.createElement("div");
   div.innerHTML = card;
-  div.id = cardID;
+  name.innerHTML = dataName;
   div.classList.add(`chosen-cards${counter}`);
+  name.classList.add(`chosen-name${counter}`);
   cards.appendChild(div);
+  cards.appendChild(name);
   counter++;
 }
 function displayUsers() {
@@ -220,7 +205,7 @@ function displayUsersWhoVoted() {
       element.classList.add("voted");
   });
 }
-ListenWhenUsersConnectedAndVoted();
+ListenWhenUsersVoted();
 displayUsers();
 getAverage();
 getName();

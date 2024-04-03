@@ -121,6 +121,44 @@ li {
   position: absolute;
   top: 120px;
 }
+.chosen-name1 {
+  width: 60px;
+  height: 100px;
+  border-radius: 15%;
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  top: 140px;
+}
+.chosen-name2 {
+  width: 60px;
+  height: 100px;
+  border-radius: 15%;
+  margin-top: 75px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  top: 280px;
+  left: 600px;
+}
+.chosen-name3 {
+  width: 60px;
+  height: 100px;
+  border-radius: 15%;
+  margin-top: 75px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  top: 280px;
+  left: 1050px;
+}
 .chosen-cards2 {
   background-color: black;
   width: 60px;
@@ -134,6 +172,20 @@ li {
   position: absolute;
   top: 280px;
   left: 600px;
+}
+.chosen-cards3 {
+  background-color: black;
+  width: 60px;
+  height: 100px;
+  border-radius: 15%;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  top: 280px;
+  left: 1050px;
 }
 
 .chosen-cards-visible {
