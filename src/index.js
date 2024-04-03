@@ -10,7 +10,6 @@ const user = document.querySelector(".usernames");
 const cards = document.querySelector(".cards");
 const possibleCardsContainer = document.querySelector(".possible-cards");
 let counter = 1;
-const userChosenCards = {};
 
 let usersVoted = [];
 let addedCards = [];
@@ -28,13 +27,12 @@ revealbutton.addEventListener("click", (e) => {
 playagain.addEventListener("click", (e) => {
   handlePlayAgainClick();
 });
-
+//make another div in which you add the value
 //Functions
 function handleCardClick(element) {
   if (usersVoted.includes(socket.id)) {
     console.log("The user already voted");
     alert("You already voted");
-
     return;
   } else {
     element.classList.add("active");
@@ -44,17 +42,11 @@ function handleCardClick(element) {
     pick.classList.remove("display");
     revealbutton.classList.remove("inactive-important");
     revealbutton.classList.remove("inactive");
-
-    // Add the selected card's value to the addedCards array
-
-    // Emit the selected card value to the server
     socket.emit("cardValue", element.innerHTML);
     socket.emit("updateCardValue", {
       socketId: socket.id,
       card: element.innerHTML,
     });
-
-    // Update the display of users who voted
     usersVoted.push(socket.id);
     displayUsersWhoVoted();
   }
@@ -70,11 +62,13 @@ function handleRevealButtonClick() {
   if (activeCard) {
     whiteningAndEmittingChosenCard(activeCard.innerHTML);
   }
-
-  // Clear the addedCards array
-  addedCards = [];
-
   deactivatePossibleCards();
+  for (let i = 0; i < counter; i++) {
+    const card2 = document.querySelector(`.chosen-cards${i} .inactive`);
+    if (card2) {
+      card2.classList.remove("inactive");
+    }
+  }
   possibleCards.forEach((element) => {
     element.classList.remove("active");
   });
@@ -85,7 +79,6 @@ function whiteningAndEmittingChosenCard(content) {
   for (let i = 0; i < counter; i++) {
     const card2 = document.querySelector(`.chosen-cards${i}`);
     if (card2.innerHTML.trim() === "") {
-      // Check if the card content is empty
       card2.innerHTML = content;
     }
     card2.classList.add("white-text");
@@ -107,7 +100,7 @@ function handlePlayAgainClick() {
   average.classList.remove("display");
   socket.emit("resetAverage");
   usersVoted = [];
-
+  addedCards = [];
   counter = 1;
   possibleCards.forEach((card) => {
     card.classList.remove("active");
@@ -202,10 +195,13 @@ function getAverage() {
 function addCard(card, dataName) {
   const cardContainer = document.createElement("div");
   const cardDiv = document.createElement("div");
+  const valueDiv = document.createElement("div");
   const nameDiv = document.createElement("div");
-  cardDiv.innerHTML = card;
+  valueDiv.innerHTML = card;
+  valueDiv.classList.add("inactive");
   nameDiv.innerHTML = dataName;
   cardDiv.classList.add(`chosen-cards${counter}`);
+  cardDiv.appendChild(valueDiv);
   nameDiv.classList.add(`chosen-name${counter}`);
   cardContainer.appendChild(cardDiv);
   cardContainer.appendChild(nameDiv);

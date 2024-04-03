@@ -192,7 +192,9 @@ li {
   top: 280px;
   left: 1050px;
 }
-
+.usernames {
+  margin-top: 50px;
+}
 .chosen-cards-visible {
   color: white;
 }
