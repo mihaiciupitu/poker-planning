@@ -10,9 +10,10 @@ const user = document.querySelector(".usernames");
 const cards = document.querySelector(".cards");
 const possibleCardsContainer = document.querySelector(".possible-cards");
 let counter = 1;
+const userChosenCards = {};
 
 let usersVoted = [];
-
+let addedCards = [];
 // Events
 possibleCards.forEach((element) => {
   element.addEventListener("click", (e) => {
@@ -45,10 +46,16 @@ function handleCardClick(element) {
     revealbutton.classList.remove("inactive");
     chosencard.innerHTML = element.innerHTML;
     chosencard.classList.add("black-text");
-
+    userChosenCards[socket.id] = chosencard;
     usersVoted.push(socket.id);
+    addedCards.push(chosencard.innerHTML);
 
+    console.log(addedCards);
     socket.emit("cardValue", chosencard.innerHTML);
+    socket.emit("updateCardValue", {
+      socketId: socket.id,
+      card: chosencard.innerHTML,
+    });
   }
 }
 
@@ -73,11 +80,13 @@ function handleRevealButtonClick() {
 function whiteningAndEmittingChosenCard(content) {
   for (let i = 0; i < counter; i++) {
     const card2 = document.querySelector(`.chosen-cards${i}`);
-    card2.innerHTML = content;
+    if (card2.innerHTML.trim() === "") {
+      // Check if the card content is empty
+      card2.innerHTML = content;
+    }
     card2.classList.add("white-text");
     card2.classList.remove("black-text");
   }
-  socket.emit("cardValue", content);
 }
 
 function deactivatePossibleCards() {
@@ -110,8 +119,10 @@ function activatePossibleCards() {
 function resetChosenCards() {
   for (let i = 1; i < counter; i++) {
     const card = document.querySelector(`.chosen-cards${i}`);
-    const name = document.querySelector(`chosen-name${i}`);
-    if (card) {
+    const name = document.querySelector(`.chosen-name${i}`);
+    console.log(card);
+    console.log(name);
+    if (card && name) {
       card.classList.remove(`chosen-cards${i}`);
       name.classList.remove(`chosen-name${i}`);
       name.innerHTML = "";
@@ -133,6 +144,20 @@ socket.on("connect", () => {
 
 socket.on("disconnect", () => {
   console.log("Disconnected from server");
+});
+socket.on("updateCardValue", (data) => {
+  const { socketId, card } = data;
+
+  // Check if the received socket ID is different from the current user's socket ID
+  if (socketId !== socket.id) {
+    // Retrieve the corresponding chosen card element based on the sender's socket ID
+    const cardElement = userChosenCards[socketId];
+
+    if (cardElement) {
+      // Update the chosen card element with the received card value
+      cardElement.innerHTML = card;
+    }
+  }
 });
 
 function getName() {
@@ -170,21 +195,23 @@ function ListenWhenUsersVoted() {
       displayUsersWhoVoted();
 
       // Display the card for each user if there are 4 or less users
-      if (usersVoted.length < 4) {
+      if (usersVoted.length <= 4) {
         addCard(data.card, data.name);
       }
     }
   });
 }
 function addCard(card, dataName) {
-  const div = document.createElement("div");
-  const name = document.createElement("div");
-  div.innerHTML = card;
-  name.innerHTML = dataName;
-  div.classList.add(`chosen-cards${counter}`);
-  name.classList.add(`chosen-name${counter}`);
-  cards.appendChild(div);
-  cards.appendChild(name);
+  const cardContainer = document.createElement("div");
+  const cardDiv = document.createElement("div");
+  const nameDiv = document.createElement("div");
+  cardDiv.innerHTML = card;
+  nameDiv.innerHTML = dataName;
+  cardDiv.classList.add(`chosen-cards${counter}`);
+  nameDiv.classList.add(`chosen-name${counter}`);
+  cardContainer.appendChild(cardDiv);
+  cardContainer.appendChild(nameDiv);
+  cards.appendChild(cardContainer);
   counter++;
 }
 function displayUsers() {
@@ -205,6 +232,7 @@ function displayUsersWhoVoted() {
       element.classList.add("voted");
   });
 }
+
 ListenWhenUsersVoted();
 displayUsers();
 getAverage();
