@@ -10,9 +10,9 @@ const user = document.querySelector(".usernames");
 const cards = document.querySelector(".cards");
 const possibleCardsContainer = document.querySelector(".possible-cards");
 let counter = 1;
-
+const MAX_USERS = 4;
 let usersVoted = [];
-let addedCards = [];
+
 // Events
 possibleCards.forEach((element) => {
   element.addEventListener("click", (e) => {
@@ -27,9 +27,14 @@ revealbutton.addEventListener("click", (e) => {
 playagain.addEventListener("click", (e) => {
   handlePlayAgainClick();
 });
-//make another div in which you add the value
+
 //Functions
 function handleCardClick(element) {
+  if (usersVoted.length >= MAX_USERS) {
+    console.log("Maximum number of users have already voted");
+    alert("Maximum number of users have already voted");
+    return;
+  }
   if (usersVoted.includes(socket.id)) {
     console.log("The user already voted");
     alert("You already voted");
@@ -60,7 +65,7 @@ function handleRevealButtonClick() {
 
   const activeCard = document.querySelector(".card.active");
   if (activeCard) {
-    whiteningAndEmittingChosenCard(activeCard.innerHTML);
+    whiteningChosenCards(activeCard.innerHTML);
   }
   deactivatePossibleCards();
   for (let i = 0; i < counter; i++) {
@@ -75,7 +80,7 @@ function handleRevealButtonClick() {
   average.classList.add("display");
 }
 
-function whiteningAndEmittingChosenCard(content) {
+function whiteningChosenCards(content) {
   for (let i = 0; i < counter; i++) {
     const card2 = document.querySelector(`.chosen-cards${i}`);
     if (card2.innerHTML.trim() === "") {
@@ -100,7 +105,7 @@ function handlePlayAgainClick() {
   average.classList.remove("display");
   socket.emit("resetAverage");
   usersVoted = [];
-  addedCards = [];
+
   counter = 1;
   possibleCards.forEach((card) => {
     card.classList.remove("active");
