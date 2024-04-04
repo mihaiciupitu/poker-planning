@@ -169,22 +169,25 @@ function ListenWhenUsersVoted() {
     }
   });
 }
-function getName() {
-  const userName =
-    localStorage.getItem("userName") || prompt("Please enter your name:");
+async function getName() {
+  let userName = localStorage.getItem("userName");
 
-  let divContent = document.querySelector("#name");
+  if (!userName) {
+    userName = await simplePrompt("Please enter your name:");
+    let divContent = document.querySelector("#name");
 
-  if (userName !== null && userName !== "") {
-    divContent.innerHTML = userName;
-    localStorage.setItem("userName", userName);
+    if (userName && userName !== "") {
+      divContent.innerHTML = userName;
+      localStorage.setItem("userName", userName);
+      socket.emit("SendUsername", userName); // Emit username to server
+    } else {
+      alert("You did not enter a name.");
+    }
   } else {
-    alert("You did not enter a name.");
+    // If username exists in localStorage, set it on the page
+    document.querySelector("#name").innerHTML = userName;
+    socket.emit("SendUsername", userName); // Emit username to server
   }
-}
-function sendName() {
-  let username = document.querySelector("#name").innerHTML;
-  socket.emit("SendUsername", username);
 }
 function getAverage() {
   socket.on("Average", (media) => {
@@ -231,5 +234,34 @@ ListenWhenUsersVoted();
 displayUsers();
 getAverage();
 getName();
-sendName();
+
 // update readme to install the app as a new user
+// Another prompt
+
+export async function simplePrompt(message, placeholder = "", _default = "") {
+  const el = document.createElement("div");
+  el.id = "custom-prompt-container";
+  el.innerHTML = `
+    <form id="custom-prompt">
+      <label for="custom-prompt-input">${message}</label>
+      <div class="tbar">
+        <input type="text" id="custom-prompt-input" placeholder="${placeholder}" required>
+        <button type="submit">OK</button> 
+      </div>
+    </form>`;
+
+  return new Promise((resolve) => {
+    document.body.appendChild(el);
+    const input = document.querySelector("#custom-prompt-input");
+    input.focus();
+    input.value = _default;
+    document
+      .querySelector("#custom-prompt")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+        const answer = input.value;
+        document.body.removeChild(el);
+        resolve(answer);
+      });
+  });
+}
