@@ -21,7 +21,7 @@
 
 - ➡ [Live Link](https://mihaiciupitu.github.io/poker-planning/)
 
-![Preview](![image](https://github.com/mihaiciupitu/poker-planning/assets/150074595/efd89ad7-7746-4744-a652-fc839e77f099)
+![Preview](![image](/desktop/preview.png))
 )
 
 
