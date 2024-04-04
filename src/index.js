@@ -235,7 +235,6 @@ displayUsers();
 getAverage();
 getName();
 
-// update readme to install the app as a new user
 // Another prompt
 
 export async function simplePrompt(message, placeholder = "", _default = "") {

@@ -267,14 +267,14 @@ li {
     display: flex;
     position: absolute;
     top: 80%;
-    left: 10%;
+    left: 2%;
     flex-wrap: wrap;
   }
   .card {
     height: 100px;
     border-radius: 15%;
     width: 60px;
-    background-color: white;
+
     margin-top: 5px;
   }
 }
