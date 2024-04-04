@@ -34,8 +34,8 @@
 
   display: flex;
   position: absolute;
-  top: 800px;
-  left: 375px;
+  top: 80%;
+  left: 25%;
 }
 .possible-cards ul li {
   margin-left: 10px;
@@ -119,10 +119,10 @@ li {
   text-align: center;
   align-items: center;
   position: absolute;
-  top: 120px;
+  top: 13%;
 }
 .chosen-name1 {
-  width: 60px;
+  width: 100px;
   height: 100px;
   border-radius: 15%;
   margin-top: 60px;
@@ -131,10 +131,11 @@ li {
   text-align: center;
   align-items: center;
   position: absolute;
-  top: 140px;
+  top: 15%;
+  left: 47%;
 }
 .chosen-name2 {
-  width: 60px;
+  width: 100px;
   height: 100px;
   border-radius: 15%;
   margin-top: 75px;
@@ -143,11 +144,11 @@ li {
   text-align: center;
   align-items: center;
   position: absolute;
-  top: 280px;
-  left: 600px;
+  top: 30%;
+  left: 34%;
 }
 .chosen-name3 {
-  width: 60px;
+  width: 100px;
   height: 100px;
   border-radius: 15%;
   margin-top: 75px;
@@ -156,8 +157,8 @@ li {
   text-align: center;
   align-items: center;
   position: absolute;
-  top: 280px;
-  left: 1050px;
+  top: 30%;
+  left: 60.3%;
 }
 .chosen-cards2 {
   background-color: black;
@@ -170,8 +171,8 @@ li {
   text-align: center;
   align-items: center;
   position: absolute;
-  top: 280px;
-  left: 600px;
+  top: 30%;
+  left: 35%;
 }
 .chosen-cards2 {
   background-color: black;
@@ -189,9 +190,15 @@ li {
   text-align: center;
   align-items: center;
   position: absolute;
-  top: 280px;
-  left: 1050px;
+  top: 30%;
+  left: 61.3%;
 }
+.scrollable-container {
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
 .usernames {
   margin-top: 50px;
 }
@@ -230,4 +237,116 @@ li {
 }
 #custom-prompt button {
   margin: 0;
+}
+@media screen and (max-width: 1500px) {
+  .chosen-cards3 {
+    top: 30%;
+    left: 67.3%;
+  }
+  .chosen-name3 {
+    left: 65.3%;
+  }
+  .chosen-cards2 {
+    top: 30%;
+    left: 30%;
+  }
+  .chosen-name2 {
+    top: 30%;
+    left: 28%;
+  }
+  .chosen-cards1 {
+    top: 13%;
+  }
+  .chosen-name1 {
+    top: 15%;
+    left: 46%;
+  }
+  .possible-cards ul {
+    list-style: none;
+
+    display: flex;
+    position: absolute;
+    top: 80%;
+    left: 10%;
+    flex-wrap: wrap;
+  }
+  .card {
+    height: 100px;
+    border-radius: 15%;
+    width: 60px;
+    background-color: white;
+    margin-top: 5px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .chosen-cards3 {
+    top: 30%;
+    left: 72.3%;
+  }
+  .chosen-name3 {
+    left: 70.3%;
+  }
+  .chosen-cards2 {
+    top: 30%;
+    left: 22%;
+  }
+  .chosen-name2 {
+    top: 30%;
+    left: 20%;
+  }
+  .chosen-cards1 {
+    top: 13%;
+  }
+  .chosen-name1 {
+    top: 15%;
+    left: 44%;
+  }
+}
+@media screen and (max-width: 800px) {
+  .chosen-cards3 {
+    top: 30%;
+    left: 75.3%;
+  }
+  .chosen-name3 {
+    left: 73.3%;
+  }
+  .chosen-cards2 {
+    top: 30%;
+    left: 15%;
+  }
+  .chosen-name2 {
+    top: 30%;
+    left: 12%;
+  }
+  .chosen-cards1 {
+    top: 13%;
+  }
+  .chosen-name1 {
+    top: 15%;
+    left: 43%;
+  }
+}
+@media screen and (max-width: 600px) {
+  .chosen-cards3 {
+    top: 30%;
+    left: 82.3%;
+  }
+  .chosen-name3 {
+    left: 79.3%;
+  }
+  .chosen-cards2 {
+    top: 30%;
+    left: 6%;
+  }
+  .chosen-name2 {
+    top: 30%;
+    left: 1%;
+  }
+  .chosen-cards1 {
+    top: 13%;
+  }
+  .chosen-name1 {
+    top: 15%;
+    left: 40%;
+  }
 }
