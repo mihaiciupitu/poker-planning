@@ -10,7 +10,7 @@ const user = document.querySelector(".usernames");
 const cards = document.querySelector(".cards");
 const possibleCardsContainer = document.querySelector(".possible-cards");
 let counter = 1;
-const MAX_USERS = 4;
+
 let usersVoted = [];
 
 // Events
@@ -30,11 +30,6 @@ playagain.addEventListener("click", (e) => {
 
 //Functions
 function handleCardClick(element) {
-  if (usersVoted.length >= MAX_USERS) {
-    console.log("Maximum number of users have already voted");
-    alert("Maximum number of users have already voted");
-    return;
-  }
   if (usersVoted.includes(socket.id)) {
     console.log("The user already voted");
     alert("You already voted");
@@ -53,7 +48,6 @@ function handleCardClick(element) {
       card: element.innerHTML,
     });
     usersVoted.push(socket.id);
-    displayUsersWhoVoted();
   }
 }
 
@@ -154,7 +148,6 @@ function ListenWhenUsersVoted() {
     if (!usersVoted.includes(socketID)) {
       // Only add the user to the list of voted users if they haven't voted before
       usersVoted.push(socketID);
-      displayUsersWhoVoted();
 
       // Display the card for each user if there are 4 or fewer users
       if (usersVoted.length <= 4) {
@@ -174,6 +167,7 @@ function ListenWhenUsersVoted() {
     }
   });
 }
+
 async function getName() {
   let userName = localStorage.getItem("userName");
 
@@ -216,27 +210,8 @@ function addCard(card, dataName) {
   cards.appendChild(cardContainer);
   counter++;
 }
-function displayUsers() {
-  socket.on("UsernamesConnected", (usernames) => {
-    user.innerHTML = "Connected users : ";
-
-    usernames.forEach((username) => {
-      const listItem = document.createElement("li");
-      listItem.textContent = username.name;
-      listItem.dataset.data = username.socketID;
-      user.appendChild(listItem);
-    });
-  });
-}
-function displayUsersWhoVoted() {
-  document.querySelectorAll("li").forEach((element) => {
-    if (usersVoted.find((vote) => vote === element.dataset.data))
-      element.classList.add("voted");
-  });
-}
 
 ListenWhenUsersVoted();
-displayUsers();
 getAverage();
 getName();
 
