@@ -150,7 +150,7 @@ function ListenWhenUsersVoted() {
       usersVoted.push(socketID);
 
       // Display the card for each user if there are 4 or fewer users
-      if (usersVoted.length <= 4) {
+      if (usersVoted.length) {
         addCard(data.card, data.name);
       }
     }
