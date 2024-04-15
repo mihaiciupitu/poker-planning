@@ -3,7 +3,6 @@
 ## Team Members 
 
 - [Mihai-Andrei Ciupitu](https://github.com/mihaiciupitu)
-- [Gioni Cornea](https://github.com/gionicornea)
 
 
 
