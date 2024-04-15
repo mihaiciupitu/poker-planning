@@ -24,9 +24,9 @@
 
 ## 📋 Installation 
 ```
-- git clone https://github.com/mihaiciupitu/poker-planning.git
-- npm i 
-- npm start
+git clone https://github.com/mihaiciupitu/poker-planning.git
+npm i 
+npm start
 ```
 
 
@@ -36,8 +36,8 @@ Current app can connect with external [poker-API](https://github.com/mihaiciupit
 
 **Steps**
 ```
--  git clone https://github.com/mihaiciupitu/poker-api.git
--  node index.js || nodemon index.js
+ git clone https://github.com/mihaiciupitu/poker-api.git
+ node index.js 
  ```
 
 - [x] Optionally install nodemon and run nodemon index.js / node index.js to start a server running on port 3000.  
