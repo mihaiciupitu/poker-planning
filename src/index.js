@@ -116,11 +116,13 @@ function resetChosenCards() {
   for (let i = 1; i < counter; i++) {
     const card = document.querySelector(`.chosen-cards${i}`);
     const name = document.querySelector(`.chosen-name${i}`);
+    const div = document.querySelector(".chosen-card");
     console.log(card);
     console.log(name);
     if (card && name) {
       card.classList.remove(`chosen-cards${i}`);
       name.classList.remove(`chosen-name${i}`);
+      div.classList.remove("chosen-card");
       name.innerHTML = "";
       card.innerHTML = "";
       console.log(`Reset card ${i}`);
@@ -196,13 +198,16 @@ function getAverage() {
 
 function addCard(card, dataName) {
   const cardContainer = document.createElement("div");
+  // cardContainer.classList.add("voter");
   const cardDiv = document.createElement("div");
   const valueDiv = document.createElement("div");
   const nameDiv = document.createElement("div");
   valueDiv.innerHTML = card;
   valueDiv.classList.add("inactive");
   nameDiv.innerHTML = dataName;
-  cardDiv.classList.add(`chosen-cards${counter}`);
+  cardDiv.classList.add("chosen-card", `chosen-cards${counter}`);
+  // cardContainer.style.left = `${counter * 70}px`;
+  // cardContainer.style.top = `${counter * 10}px`;
   cardDiv.appendChild(valueDiv);
   nameDiv.classList.add(`chosen-name${counter}`);
   cardContainer.appendChild(cardDiv);

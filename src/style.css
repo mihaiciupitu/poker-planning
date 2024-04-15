@@ -108,7 +108,7 @@
 li {
   list-style-type: none;
 }
-.chosen-cards1 {
+.chosen-card {
   background-color: black;
   width: 60px;
   height: 100px;
@@ -119,8 +119,11 @@ li {
   text-align: center;
   align-items: center;
   position: absolute;
+}
+.chosen-cards1 {
   top: 13%;
 }
+
 .chosen-name1 {
   width: 100px;
   height: 100px;
@@ -161,16 +164,6 @@ li {
   left: 60.3%;
 }
 .chosen-cards2 {
-  background-color: black;
-  width: 60px;
-  height: 100px;
-  border-radius: 15%;
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  position: absolute;
   top: 30%;
   left: 35%;
 }
@@ -180,16 +173,6 @@ li {
   height: 100px;
 }
 .chosen-cards3 {
-  background-color: black;
-  width: 60px;
-  height: 100px;
-  border-radius: 15%;
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  position: absolute;
   top: 30%;
   left: 61.3%;
 }
@@ -238,73 +221,26 @@ li {
 #custom-prompt button {
   margin: 0;
 }
-.chosen-cards4 {
-  background-color: black;
-  width: 60px;
-  height: 100px;
-  border-radius: 15%;
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
+.voter {
   position: absolute;
+}
+.chosen-cards4 {
   top: 65%;
   left: 30%;
 }
 .chosen-cards5 {
-  background-color: black;
-  width: 60px;
-  height: 100px;
-  border-radius: 15%;
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  position: absolute;
   top: 65%;
   left: 35%;
 }
 .chosen-cards6 {
-  background-color: black;
-  width: 60px;
-  height: 100px;
-  border-radius: 15%;
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  position: absolute;
   top: 65%;
   left: 40%;
 }
 .chosen-cards7 {
-  background-color: black;
-  width: 60px;
-  height: 100px;
-  border-radius: 15%;
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  position: absolute;
   top: 65%;
   left: 45%;
 }
 .chosen-cards8 {
-  background-color: black;
-  width: 60px;
-  height: 100px;
-  border-radius: 15%;
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  position: absolute;
   top: 65%;
   left: 50%;
 }
